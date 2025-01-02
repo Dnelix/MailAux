@@ -1,0 +1,27 @@
+php_value allow_url_fopen On
+php_flag display_errors On
+
+# CORS headers for the entire domain.
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+Header set Access-Control-Max-Age "86400"
+Header set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+
+# Allow the HTTP authorization header to be used in session validations
+SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+
+RewriteEngine On
+
+# Remove file extensions from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+# RewriteRule ^([^/]+)/?$ $1.php [L]
+RewriteRule ^(.*)$ $1.php [L]
+
+# Provide Specific Index Page (Set the default handler)
+DirectoryIndex home.php
+
+# Enable pretty URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ home.php?page=$1 [NC,L]
+# RewriteRule ^([^\.]+)/([^/]+)$ home.php?page=$1&content=$2 [NC,L]
