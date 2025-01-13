@@ -1,8 +1,9 @@
 <?php
 
 try{    
-    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' WHERE id = :bid LIMIT 1');            
-    $query -> bindParam(':bid', $bid, PDO::PARAM_INT);
+    $query = $readDB -> prepare ('SELECT title, logs, updated FROM '. $tbl .' WHERE id = :cmid AND userid = :uid LIMIT 1');            
+    $query -> bindParam(':cmid', $cmid, PDO::PARAM_INT);
+    $query -> bindParam(':uid', $uid, PDO::PARAM_INT);
     $query -> execute();
 
     $rowCount = $query->rowCount();

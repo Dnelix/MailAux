@@ -1,9 +1,5 @@
 <?php
-if ($user->role === "business") {
-    $profileCompletion = calcProfileCompletion($user->fullname, $bizdata->name, $bizdata->description, $bizdata->address, $photoFile);
-} else {
-    $profileCompletion = calcProfileCompletion($user->fullname, $user->phone, $user->email, $user->username, $user->username);
-}
+$profileCompletion = calcProfileCompletion($user->fullname, $bizdata->name, $bizdata->description, $bizdata->address, $bizdata->email);
 
 $initials = getInitials($logName);
 ?>
@@ -28,7 +24,7 @@ $initials = getInitials($logName);
                             <?php if ($user->role === "business") { ?>
                                 <a href="javascript:;" class="btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Upgrade account</a>
                             <?php } else { ?>
-                                <a onClick="javascript:swal_Popup('info', 'Sorry we can\'t do this now');" class="btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3">Switch to Business account</a>
+                                <a onClick="javascript:swal_popup('info', 'Sorry we can\'t do this now');" class="btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3">Upgrade</a>
                             <?php } ?>
                         </div>
                         
@@ -37,7 +33,7 @@ $initials = getInitials($logName);
                                 <i class="fa fa-user me-3"></i> <?= $user->phone; ?>
                             </a>
                             <a href="javascript:;" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                <i class="fa fa-map-marker mx-3"></i> ...
+                                <i class="fa fa-map-marker mx-3"></i> <?= $location; ?>
                             </a>
                             <a href="javascript:;" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                 <i class="fa fa-envelope mx-3"></i> <?= $user->email; ?>
@@ -113,7 +109,7 @@ $initials = getInitials($logName);
                             <span class="fw-bolder fs-6"><?= $profileCompletion; ?>%</span>
                         </div>
                         <div class="h-5px mx-3 w-100 bg-light mb-3">
-                            <div class="bg-success rounded h-5px" role="progressbar" style="width: <?= $profileCompletion; ?>%;" aria-valuenow="<?= $profileCompletion ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="bg-primary rounded h-5px" role="progressbar" style="width: <?= $profileCompletion; ?>%;" aria-valuenow="<?= $profileCompletion ?>" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
 

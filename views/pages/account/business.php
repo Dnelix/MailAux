@@ -1,5 +1,6 @@
 <?php
 $country_list = getCountries();
+$photoFile = !empty($bizdata->logo) ? $bizdata->id."/".$bizdata->logo : "upload.png";
 ?>
 
 <div class="card mb-5 mb-xl-10">
@@ -10,7 +11,7 @@ $country_list = getCountries();
     </div>
 
     <div id="settings_business_details" class="collapse show">
-        <form id="business_details_form" class="form" enctype="multipart/form-data">
+        <form id="bizDataForm" class="form" onsubmit="return false;" enctype="multipart/form-data">
 
             <input type="hidden" name="userid" value="<?= $loguserid; ?>"/>
 
@@ -19,17 +20,13 @@ $country_list = getCountries();
                     <label class="col-lg-4 col-form-label fw-bold fs-6">Logo</label>
                     <div class="col-lg-8">
                         <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('assets/media/svg/brand-logos/vodafone.svg')">
-                        <?php if(!empty($photoFile)){
-                                echo '<div class="image-input-wrapper w-125px h-125px" style="background-image: url('. $photoFile .')"></div>';
-                            } else {
-                                echo '<div class="image-input-wrapper w-125px h-125px" style="background-image: url(assets/media/uploads/upload.png)"></div>';
-                            }
-                        ?>
+
+                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url('assets/uploads/<?= $photoFile; ?>')"></div>
+
                             <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change Logo">
                                 <i class="bi bi-pencil-fill fs-7"></i>
-                                <input type="file" name="photo" accept=".png, .jpg, .jpeg" />
+                                <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
                                 <input type="hidden" name="logo_remove" />
-                                <input type="hidden" name="imgid" value="<?//= $imageid; ?>" />
                             </label>
                             <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel logo">
                                 <i class="bi bi-x fs-2"></i>
@@ -132,31 +129,24 @@ $country_list = getCountries();
                     </div>
                 </div>
 
-                <div class="row mb-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">Currency
-                        <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Your customers will be billed in this currency and your financial reports will reflect this currency"></i>
-                    </label>
-                    <div class="col-lg-8 fv-row">
-                        <select name="currency" aria-label="Select a Currency" data-control="select2" data-placeholder="Select a currency.." class="form-select form-select-solid form-select-lg">
-                            <option value="">Select a currency..</option>
-                            <option value="NGN" selected><b>NGN</b>&#160;-&#160;Nigerian Naira</option>
-                            <option value="USD" disabled><b>USD</b>&#160;-&#160;USA dollar</option>
-                            <option value="GBP" disabled><b>GBP</b>&#160;-&#160;British pound</option>
-                            <option value="AUD" disabled><b>AUD</b>&#160;-&#160;Australian dollar</option>
-                            <option value="JPY" disabled><b>JPY</b>&#160;-&#160;Japanese yen</option>
-                            <option value="CAD" disabled><b>CAD</b>&#160;-&#160;Canadian dollar</option>
-                            <option value="CHF" disabled><b>CHF</b>&#160;-&#160;Swiss franc</option>
-                        </select>
-                        <div class="form-text">Only NGN is supported at the moment. We are working on providing support for other currencies</div>
-                    </div>
-                </div>
-
             </div>
             
             <div class="card-footer d-flex justify-content-end py-6 px-9">
                 <button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-                <button type="submit" class="btn btn-primary" id="business_details_submit"><?= displayLoadingBtn('Save Changes'); ?></button>
+                <button type="submit" class="btn btn-primary" id="bizDataBtn" onclick="updateBiz('<?= $bizdata->id; ?>')"><?= displayLoadingBtn('Save Changes'); ?></button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    function updateBiz(bid){
+        var web = '<?= $appURL; ?>';
+        var userid = '<?= $loguserid; ?>';
+        var url = web+"controllers/business.php?uid="+userid+"&bid="+bid;
+        var formData = extractFormData('#bizDataForm');
+        var btn = "#bizDataBtn";
+
+        AJAXcall("POST", url, btn, formData, (r)=>{ handleResponseMsg(r, 'confirmreload'); });
+    }
+</script>

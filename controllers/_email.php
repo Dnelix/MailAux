@@ -43,7 +43,7 @@ $htmlBody = file_get_contents($htmlFile);
 $color_pri  = $colors_hex[0];
 $color_sec  = $colors_hex[1];
 $c_phone    = $c_phone[0];
-$c_email    = $c_email[0];
+$reply_to    = $c_email[0];
 $c_address  = $c_address[0];
 
 $items_to_replace = ['color_pri', 'color_sec', 'to_name', 'subject', 'message', 'sender', 'company', 'getStarted_link', 'activation_link', 'privacypolicy_link', 'c_tagline', 'c_shortsite', 'c_website', 'c_description', 'c_phone', 'c_email', 'svg_verifiedicon', 'email_image', 'email_assets', 'logo_image', 'year', 'c_linkedin', 'c_facebook', 'c_twitter', 'c_whatsapp'];

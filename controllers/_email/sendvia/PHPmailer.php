@@ -1,10 +1,12 @@
 <?php
+## Get externally
+// $to_name, $to_mail, $subject, $htmlBody, $from_name, $from, $reply_to
     try{
         $to = "$to_name <$to_mail>";
         $subject = $subject;
         $message = $htmlBody;
         $headers = "From: $from_name <$from>";
-        $headers .= "\r\nReply-To: $c_email";
+        $headers .= "\r\nReply-To: $reply_to";
         $headers .= "\r\nMIME-Version: 1.0";
         $headers .= "\r\nContent-Type: text/html; charset=UTF-8";
         $headers .= "\r\nX-Mailer: PHP/" . phpversion();

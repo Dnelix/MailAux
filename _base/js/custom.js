@@ -133,32 +133,26 @@ function swal_popup(status, responseMessage, btn_text='OKAY!', callback){
     if (!responseMessage || responseMessage == '') {
         responseMessage = 'NO RESPONSE MESSAGE!';
     }
-    if (status === 'error'){ var btn_type = "btn font-weight-bold btn-danger";} 
-    else if (status === 'success') { var btn_type = "btn btn-primary";}
-    else if (status === 'info') { var btn_type = "btn btn-info";}
-    else { var btn_type = "btn btn-warning";}
+    
+    let btn_type = "btn btn-warning"; // Default to warning
+    if (status === 'error') btn_type = "btn font-weight-bold btn-danger";
+    else if (status === 'success') btn_type = "btn btn-primary";
+    else if (status === 'info') btn_type = "btn btn-info";
 
-    if(callback){
-        Swal.fire({
-            html: responseMessage,
-            icon: status,
-            buttonsStyling: false,
-            confirmButtonText: btn_text,
-            customClass: {
-                confirmButton: btn_type
-            },
-            timer: "3000"
-        }).then(callback(status));
+    const swalConfig = {
+        html: responseMessage,
+        icon: status,
+        buttonsStyling: false,
+        confirmButtonText: btn_text,
+        customClass: {
+            confirmButton: btn_type
+        }
+    };
+
+    if (callback) {
+        Swal.fire(swalConfig).then(() => callback()); // Ensure callback is invoked properly
     } else {
-        Swal.fire({
-            html: responseMessage,
-            icon: status,
-            buttonsStyling: false,
-            confirmButtonText: btn_text,
-            customClass: {
-                confirmButton: btn_type
-            }
-        });
+        Swal.fire(swalConfig);
     }
 }
 
@@ -274,8 +268,8 @@ function handleResponse(response){
         'status': responseStatus,
         'message' : responseMessage,
         'details': responseDetails,
+        'dataraw': response.data,
         'data': JSON.stringify(response.data)
-        //'data': response.data
     };
 }
 

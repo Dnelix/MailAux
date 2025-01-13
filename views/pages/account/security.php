@@ -1,4 +1,4 @@
 <?php
     include_once('sections/logs.php');
-    include_once('sections/preferences.php');
+    //include_once('sections/preferences.php');
 ?>

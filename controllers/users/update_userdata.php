@@ -6,10 +6,16 @@
         sendResponse(400, false, $errorMsg); exit();
     }
 
+    $provided_fields = array();
+    foreach($jsonData as $data => $value){
+        $$data = $value;
+        if (!empty($$data)) {$provided_fields[] = $data;}
+    }
+
     //2. Check if key strings are empty or have values above the DB limits
     $fieldLengthMsg = validateFieldLength($jsonData->fullname, 2, 30, 'Full Name');
     $fieldLengthMsg .= validateFieldLength($jsonData->phone, 5, 15, 'Phone Number');
-    if (!empty($fieldLengthMsg)) { 
+    if (!empty($fieldLengthMsg)) {
         sendResponse(400, false, $fieldLengthMsg); exit();
     }
     
@@ -23,17 +29,15 @@
         sendResponse(400, false, 'Username already taken; try another name'); exit();
     }
 
+    //clean up array
+    if(in_array('userid', $provided_fields)){
+        $provided_fields = array_diff($provided_fields, ['userid']);
+        $provided_fields = array_values($provided_fields);
+    }
+
     $returnData = array();
     //4. update user record
-    $itemsArray = array('username', 'phone', 'fullname', 'address', 'country', 'dob');
-    $username   = $jsonData->username;
-    $phone      = $jsonData->phone;
-    $fullname   = $jsonData->fullname;
-    $address    = isset($jsonData->address) ? $jsonData->address : null;
-    $state = isset($jsonData->state) ? $jsonData->state.', ' : null; //prepare to concatenate with country
-    $country    = isset($jsonData->country) ? $state.$jsonData->country : null;
-    $dob        = (isset($jsonData->dob) && !empty($jsonData->dob)) ? $jsonData->dob : null;
-
+    $itemsArray = $provided_fields;
     $upd_tbl = 'tbl_users';
     $rid = $uid;
     include_once('common/update_record.php');

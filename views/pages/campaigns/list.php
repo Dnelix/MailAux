@@ -2,7 +2,7 @@
 
     <?php include_once('list/header.php'); ?>
     
-    <div class="card-body pt-1">
+    <div class="card-body pt-1" style="overflow-x:scroll">
 
         <?php include_once('list/options.php'); ?>
         

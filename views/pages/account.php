@@ -1,5 +1,5 @@
 <?php
-$biz = retrieveDataFrom($c_website.'controllers/business.php?uid='.$loguserid);
+$biz = retrieveDataFrom($c_website.'controllers/business.php?data&uid='.$loguserid);
 $bizdata = (isset($biz->data) ? $biz->data : null);
 $location = (isset($bizdata->city) ? $bizdata->city.', '.$bizdata->state : 'Unknown');
 

@@ -93,9 +93,10 @@ try{
     //create a business profile for the user
     $uid = $insertID;
     $ins_tbl = 'tbl_business';
-    $itemsArray = ['userid', 'name'];
+    $itemsArray = ['userid', 'name', 'email'];
     $userid = $uid;
     $name = $bizname;
+    $email = strtolower(str_replace(' ', '', $bizname)).'@'.$c_shortsite; //temporal business email
     require_once('business/insert_biz_record.php');
 
     //9. return the newly created user details

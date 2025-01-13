@@ -5,7 +5,7 @@
         </div>
     </div>
     <div id="account_profile_details" class="collapse show">
-        <form id="account_profile_details_form" class="form">
+        <form id="profileForm" class="form">
             <div class="card-body border-top p-9">
                 <!--div class="row mb-6">
                     <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
@@ -33,7 +33,7 @@
                 <div class="row mb-6">
                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Avatar</label>
                     <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-150px h-lg-150px me-7 mb-4">
-                        <?= displayUserIcon('AI', $loguserid, 'large'); ?>
+                        <?= displayUserIcon(getInitials($logName), $loguserid, 'large'); ?>
                     </div>
                 </div>
 
@@ -96,10 +96,22 @@
             
             <div class="card-footer d-flex justify-content-end py-6 px-9">
                 <button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-                <button type="submit" class="btn btn-primary" id="account_profile_details_submit">
+                <button type="submit" class="btn btn-primary" id="profileBtn" onclick="updateProfile()">
                     <?= displayLoadingBtn('Save Changes'); ?>
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    function updateProfile(){
+        var web = '<?= $appURL; ?>';
+        var userid = '<?= $loguserid; ?>';
+        var url = web+"controllers/users.php?userid="+userid;
+        var formData = extractFormData('#profileForm');
+        var btn = "#profileBtn";
+
+        AJAXcall("PATCH", url, btn, formData, (r)=>{ handleResponseMsg(r, 'confirmreload'); });
+    }
+</script>

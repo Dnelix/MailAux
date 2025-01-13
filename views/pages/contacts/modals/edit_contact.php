@@ -82,7 +82,7 @@
         var url = web+"controllers/contacts.php?uid="+uid+"&cid="+cid;
         
         AJAXcall("GET", url, null, null, (r)=>{
-            var data = r.data;
+            var data = r.dataraw;
             //console.log(data.content);
             $(formid+' #cid').val(data.id);
             $(formid+' #e_email').val(data.email);

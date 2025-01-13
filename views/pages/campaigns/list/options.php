@@ -15,12 +15,12 @@
                 <select class="form-select form-select-transparent text-gray-900 fs-7 lh-1 fw-bold py-0 ps-3 w-auto" data-hide-search="true" data-control="select2" data-dropdown-css-class="w-150px" data-placeholder="Select an option" data-kt-table-widget-3="filter_status">
                     <option></option>
                     <option value="Show All" selected>Show All</option>
-                    <option value="Live Now">Live Now</option>
+                    <option value="Draft">Draft</option>
                     <option value="Reviewing">Reviewing</option>
-                    <option value="Paused">Paused</option>
+                    <option value="Completed">Paused</option>
                 </select>
             </div>
-            <div class="d-flex align-items-center fw-bold">
+            <!--div class="d-flex align-items-center fw-bold">
                 <div class="text-muted me-2">Budget</div>
                 <select class="form-select form-select-transparent text-gray-900 fs-7 lh-1 fw-bold py-0 ps-3 w-auto" data-hide-search="true" data-dropdown-css-class="w-150px" data-control="select2" data-placeholder="Select an option" data-kt-table-widget-3="filter_status">
                     <option></option>
@@ -29,8 +29,9 @@
                     <option value="5000-10000">$5,001 - $10,000</option>
                     <option value=">10000">More than $10,001</option>
                 </select>
-            </div>
+            </div-->
         </div>
+        
         <div class="d-flex align-items-center gap-4">
             <a href="#" class="text-hover-primary ps-4" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                 <i class="ki-outline ki-filter fs-2 text-gray-500"></i>
@@ -80,4 +81,5 @@
                 </div>
             </div>
         </div>
+
     </div>

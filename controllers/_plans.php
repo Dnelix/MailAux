@@ -2,7 +2,7 @@
 require_once('__init__.php');
 
 $tbl            = 'tbl_plans';
-$all_fields     = 'id, plan, max_business, max_contacts, max_groups, max_campaigns, max_templates';
+$all_fields     = 'id, plan, level, max_business, max_contacts, max_groups, max_campaigns, max_templates';
 
 
 if(array_key_exists('uid', $_GET)){

@@ -360,6 +360,18 @@ function sendEmail($type, $subject, $to_mail, $to_name='', $message='', $sender=
 
   return $result;
 }
+function generateNameFromEmail($email) {
+  // Extract the part before '@'
+  $namePart = explode('@', $email)[0];
+
+  // Replace '.' and '_' with spaces
+  $namePart = str_replace(['.', '_'], ' ', $namePart);
+
+  // Capitalize the first letter of each word
+  $namePart = ucwords($namePart);
+
+  return $namePart;
+}
 
 //convert numbers to month names or weekdays
 function numberToMonthOrDay($number, $type = 'month') {
@@ -581,6 +593,7 @@ function statusState($status, $show='text'){
   switch ($status) {
     case 'Not Started':
     case 'Pending':
+    case 'Draft':
       $state = 'warning';
       $i = 'ni ni-alert-circle';
       break;
@@ -624,7 +637,7 @@ function showStatus($status, $display='block'){
   if($display == 'text'){
     $html = '<span class="badge badge-dot bg-'.$state.'">'.$status.'</span>';
   } else{
-    $html = '<span class="badge badge-sm badge-dim bg-outline-'.$state.' d-md-inline-flex">'.$status.'</span>';
+    $html = '<span class="badge badge-light-'.$state.' ">'.$status.'</span>';
   }
 
   echo $html;
@@ -659,7 +672,7 @@ function readableDateTime($timeString, $show=null) {
   } else if ($show==='timeonly'){
     $formattedDateTime = $formattedTime;
   } else {
-    $formattedDateTime = $formattedDate . ' at ' . $formattedTime;
+    $formattedDateTime = $formattedDate . ', ' . $formattedTime;
   }
 
   return $formattedDateTime;

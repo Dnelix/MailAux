@@ -11,7 +11,7 @@
 
         <tbody class="fs-6">
             <?php
-                $cid = 1;
+                
                 if($c_count > 0){
                     foreach($c_data as $c){
                         include("table/content.php");

@@ -12,31 +12,31 @@
 
                 <div class="row g-5" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                     <div class="col-6">
-                        <a href="dashboard" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200" data-kt-button="true">
+                        <a href="dashboard" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200 bg-light-primary" data-kt-button="true">
                             <span class="mb-2"><i class="fa fa-calendar fs-1"></i></span>
                             <span class="fs-7 fw-bold">Home</span>
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="contacts" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200" data-kt-button="true">
+                        <a href="contacts" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200 bg-light-success" data-kt-button="true">
                             <span class="mb-2"><i class="fa fa-book fs-1"></i></span>
                             <span class="fs-7 fw-bold">Contacts</span>
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="campaigns" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200" data-kt-button="true">
+                        <a href="campaigns" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200 bg-light-danger" data-kt-button="true">
                             <span class="mb-2"><i class="fa fa-wifi fs-1"></i></span>
                             <span class="fs-7 fw-bold">Campaigns</span>
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="templates" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200" data-kt-button="true">
+                        <a href="templates" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200 bg-light-warning" data-kt-button="true">
                             <span class="mb-2"><i class="fa fa-medal fs-1"></i></span>
                             <span class="fs-7 fw-bold">Templates</span>
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="account" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200" data-kt-button="true">
+                        <a href="account" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-100px h-100px border-gray-200 bg-light-info" data-kt-button="true">
                             <span class="mb-2"><i class="fa fa-cog fs-1"></i></span>
                             <span class="fs-7 fw-bold">Account</span>
                         </a>

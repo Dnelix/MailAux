@@ -1,8 +1,8 @@
 <?php
 
 try{    
-    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' WHERE id = :bid LIMIT 1');            
-    $query -> bindParam(':bid', $bid, PDO::PARAM_INT);
+    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' id = :tid LIMIT 1');
+    $query -> bindParam(':tid', $tid, PDO::PARAM_INT);
     $query -> execute();
 
     $rowCount = $query->rowCount();

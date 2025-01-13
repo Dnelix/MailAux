@@ -34,6 +34,9 @@ if(array_key_exists('uid', $_GET)){
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if(array_key_exists('data', $_GET)){
+            require_once('business/user_business_data.php');
+        }
         require_once('business/user_business_list.php');
     }
 

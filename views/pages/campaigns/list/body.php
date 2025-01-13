@@ -2,24 +2,21 @@
         <thead class="d-none">
             <tr>
                 <th>Campaign</th>
-                <th>Platforms</th>
+                <!-- <th>Platforms</th> -->
                 <th>Status</th>
-                <th>Team</th>
+                <th>Recipients</th>
                 <th>Date</th>
-                <th>Progress</th>
-                <th>Action</th>
+                <!-- <th>Progress</th>
+                <th>Action</th> -->
             </tr>
         </thead>
 
         <tbody>
             <?php 
-                include('item.php');
-                include('item.php');
-                include('item.php');
-                include('item.php');
-                include('item.php');
-                include('item.php');
-                include('item.php');
+                foreach($cm_data as $cm){
+                    include('item.php');
+                }
+                
             ?>
         </tbody>
     </table>

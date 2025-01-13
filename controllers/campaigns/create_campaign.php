@@ -18,32 +18,34 @@ if (!empty($errorMsg)) {
 $max_campaigns = getPlanData($uid, 'uid', 'max_campaigns');
 $totalcampaigns = countRecord('campaigns', 'uid='.$uid);
 if($totalcampaigns >= $max_campaigns){
-    sendResponse(400, false, 'You have exceeded your plan limit for campaigns. Please upgrade to add more campaigns'); exit();
+    //sendResponse(400, false, 'You have exceeded your plan limit for campaigns. Please upgrade to add more campaigns'); exit();
 }
 
-// $from_name;
-// $from_email;
-// -template_id
-// -content
+//4. determine method for contacts retrieval
 $group_id = !empty($group_id) ? $group_id : 0;
 $contacts_array = [];
 
-//4. determine actions
 if($send_to == 'group'){
     include_once('create/getgroupcontacts.php');
 } else if ($send_to == 'contacts'){
     $contacts_array = $jsonData->contacts; //contact array from JS
 } else if ($send_to == 'manual'){
-    sendResponse(401, false, 'Contact', $jsonData->contacts); exit();
+    sendResponse(401, false, 'Contacts', $jsonData->contacts); exit(); //to be updated
 } else {
     sendResponse(401, false, 'Invalid category. Unable to proceed'); exit();
 }
 
+//5. Get FROM data ($from_name; $from_email;)
+$biz = retrieveDataFrom($c_website.'controllers/business.php?data&uid='.$uid);
+$biz_data = (isset($biz->data) ? $biz->data : []);
+$from_name = $biz_data->name;
+$from_email = $biz_data->email;
+
 $returnData = array();
 try{
     // Insert into table
-    $itemsArray = ['userid','title','send_to','group_id','contacts','num_recipients','status','updated'];
-    $userid = $uid;  // title, send_to already set from form. group_id, contacts, set in code
+    $itemsArray = ['userid','title','from_name','from_email','send_to','group_id','contacts','num_recipients','status','updated'];
+    $userid = $uid;  // title, send_to already set from form. from_name, from_email, group_id, contacts, set in code
     $num_recipients = count($contacts_array);
     $contacts = implode(',', $contacts_array);
     $status = 'draft';

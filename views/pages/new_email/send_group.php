@@ -70,7 +70,7 @@
 
             AJAXcall("POST", url, btn, formData, (r)=>{ 
                 var lastId = (r.data) ? JSON.parse(r.data).lastInsertID : null;
-                handleResponseMsg(r, 'confirmredirect', 'templates?cmid='+lastId);
+                handleResponseMsg(r, 'confirmredirect', 'templates&cmid='+lastId);
             });
         }
     </script>

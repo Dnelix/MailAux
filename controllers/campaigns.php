@@ -12,9 +12,15 @@ if(array_key_exists('uid', $_GET)){
         if(!$cmid = validateNum($_GET['cmid'])) {sendResponse(400, false, 'Invalid campaign ID!'); exit();}
 
         if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(array_key_exists('logs', $_GET)){
+                require_once('campaigns/get_campaign_logs.php');
+            }
             require_once('campaigns/get_campaign_data.php');
         }
         if($_SERVER['REQUEST_METHOD'] === 'PATCH' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(array_key_exists('send', $_GET)){
+                require_once('campaigns/send_mails.php');
+            }
             require_once('campaigns/update_campaign_data.php'); //equally update via POST
         }
         if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
