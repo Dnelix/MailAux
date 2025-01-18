@@ -41,6 +41,6 @@ catch (PDOException $e){
 }
 
 // 8. Return outputs
-sendResponse(201, true, "Contact added for user", $returnData);
+sendResponse(201, true, "Mailing group created successfully", $returnData);
 
 ?>

@@ -8,10 +8,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once('templates/create_template.php');
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    require_once('templates/list_templates.php');
-}
-
 if(array_key_exists('uid', $_GET)){
     if(!$uid = validateNum($_GET['uid'])) {sendResponse(400, false, 'Invalid ID!'); exit();}
     
@@ -41,6 +37,10 @@ if(array_key_exists('tid', $_GET)){
     else{
         sendResponse(401, false, 'Invalid request for template');
     }
+}
+
+if($_SERVER['REQUEST_METHOD'] === 'GET') {
+    require_once('templates/list_templates.php');
 }
 
 else {

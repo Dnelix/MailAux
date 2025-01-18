@@ -35,6 +35,10 @@
             var userid = '<?= $loguserid; ?>';
             var url = web+"controllers/campaigns.php?uid="+userid;
             var c_title = _('subject').value;
+
+            if(isEmpty(c_title)){
+                swal_popup('error', 'Please set a title/subject for the campaign'); return false;
+            }
             
             var send_to = 'contacts';
             // Build an array of selected values

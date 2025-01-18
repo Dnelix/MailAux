@@ -1,7 +1,7 @@
 <?php
 
 try{    
-    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' id = :tid LIMIT 1');
+    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' WHERE id = :tid LIMIT 1');
     $query -> bindParam(':tid', $tid, PDO::PARAM_INT);
     $query -> execute();
 

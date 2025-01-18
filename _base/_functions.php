@@ -346,6 +346,65 @@ function sendToController($data, $controllerURL, $method='POST', $token=null){
 }
 
 // Send any Email
+function sendEmail2($subject, $to_mail, $to_name = '', $message = '', $sender_name = '', $append = false) {
+  global $SMTP_Host, $SMTP_Username, $SMTP_Password, $SMTP_Port, $SMTP_Secure, $imap_server, $imap_port;
+
+  $sender_email = $SMTP_Username;
+  $noHtml = strip_tags(str_replace(['<br>', '<br/>', '<p>', '</p>'], "\n", $message));
+  $e_msg = [];
+
+  $mail = new \PHPMailer\PHPMailer\PHPMailer();
+
+  try {
+      // Configure the SMTP settings
+      $mail->isSMTP();
+      $mail->Host = $SMTP_Host;
+      $mail->Port = $SMTP_Port;
+      $mail->SMTPAuth = true;
+      $mail->Username = $SMTP_Username;
+      $mail->Password = $SMTP_Password;
+      $mail->SMTPSecure = $SMTP_Secure;
+      $mail->Timeout = 30; // SMTP timeout
+
+      // Set the email content
+      $mail->clearAddresses();
+      $mail->setFrom($sender_email, $sender_name);
+      $mail->addAddress($to_mail, $to_name);
+      $mail->addReplyTo($sender_email, $sender_name);
+      $mail->isHTML(true);
+      $mail->Subject = $subject;
+      $mail->Body = $message;
+      $mail->AltBody = $noHtml;
+
+      // Send the email
+      if ($mail->send()) {
+          $e_msg['success'] = "Email sent to $to_mail successfully.";
+      } else {
+          $e_msg['error'] = "Mail sending to $to_mail failed. Error: {$mail->ErrorInfo}";
+          return $e_msg;
+      }
+
+      // Append to IMAP Sent folder if requested
+      if ($append && !empty($imap_server)) {
+          $imap_stream = @imap_open("{" . $imap_server . ":" . $imap_port . "/ssl/novalidate-cert}", $SMTP_Username, $SMTP_Password, OP_HALFOPEN, 1, [
+              'DISABLE_AUTHENTICATOR' => ['GSSAPI', 'NTLM']
+          ]);
+          if ($imap_stream) {
+              $mailMessage = $mail->getSentMIMEMessage();
+              imap_append($imap_stream, "{" . $imap_server . ":" . $imap_port . "/ssl/novalidate-cert}Sent", $mailMessage);
+              $e_msg['success'] = 'Email sent and appended to "Sent" folder.';
+              imap_close($imap_stream);
+          } else {
+              $e_msg['error'] = 'Error appending email to "Sent" folder.';
+          }
+      }
+  } catch (Exception $e) {
+      $e_msg['error'] = 'Error sending email: ' . $e->getMessage();
+  }
+
+  return $e_msg;
+}
+
 function sendEmail($type, $subject, $to_mail, $to_name='', $message='', $sender=''){
   $data = array(
     'type'    => $type,

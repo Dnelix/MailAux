@@ -36,7 +36,7 @@ $cmid = isset($_GET['cmid']) ? $_GET['cmid'] : null;
         var formData = {content : mailContent, template_id : tid}
         var btn = "#finish_btn";
 
-        AJAXcall("PATCH", url, btn, formData, (r)=>{ handleResponseMsg(r, 'confirmredirect', 'send_mail&cmid='+cmid); });
+        AJAXcall("POST", url, btn, formData, (r)=>{ handleResponseMsg(r, 'confirmredirect', 'send_mail&cmid='+cmid); });
         //goTo('send_mail&tid=1')
     }
 </script>

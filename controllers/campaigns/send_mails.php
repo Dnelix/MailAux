@@ -10,59 +10,37 @@ if (empty($cm_data->contacts)) {
 $contacts = explode(",", $cm_data->contacts);
 
 //2. Process mails
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-require '../models/mail/phpmailer/src/Exception.php';
+// Include the PHPMailer library
 require '../models/mail/phpmailer/src/PHPMailer.php';
+require '../models/mail/phpmailer/src/Exception.php';
 require '../models/mail/phpmailer/src/SMTP.php';
 
-$noHtml = "You are getting this message because your mail client does not support HTML messages, hence you cannot receive emails from {$company}. Kindly update your email to avoid missing out on exciting offers.";
-$mail = new PHPMailer(true);
-$mail->isSMTP();
-$mail->Host = $SMTP_Host;
-$mail->SMTPAuth = true;
-$mail->Username = $SMTP_Username;
-$mail->Password = $SMTP_Password;
-$mail->SMTPSecure = 'tls';
-$mail->Port = 587;
-$mail->CharSet = 'UTF-8';
-
-$e_msg = [];
 $batchSize = 50;
 $batchCount = 0;
+$e_msg = [];
 
 foreach ($contacts as $c){
     $to_name    = generateNameFromEmail($c);
     $to_mail    = trim($c);
     $subject    = $cm_data->title;
-    $htmlBody   = $cm_data->content;
-    $from_name  = $cm_data->from_name;
-    $from       = $cm_data->from_email;
+    $message    = $cm_data->content;
+    $sender_name= $cm_data->from_name;
 
-    try {
-        $mail->clearAddresses();
-        $mail->setFrom($from, $from_name);
-        $mail->addAddress($to_mail, $to_name);
-        $mail->addReplyTo($from, $from_name);
-
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body = $htmlBody;
-        $mail->AltBody = $noHtml;
-
-        if(!$mail->send()) {
-            $e_msg['error'][] = "Mail sending to $to_mail failed. Error: {$mail->ErrorInfo}";
-        } else {
-            $e_msg['success'][] = "Email sent to $to_mail successfully.";
-        }
-    } catch (Exception $e) {
-        $e_msg['error'][] = "Failed to send email to $to_mail. Error: {$mail->ErrorInfo}";
-    }
+    $e_msg[] = sendEmail2($subject, $to_mail, $to_name, $message, $sender_name, false);
 
     $batchCount++;
+    //##fixed sleeping
+    // if ($batchCount >= $batchSize) {
+    //     sleep(10); // Pause to prevent server overload
+    //     $batchCount = 0;
+    // }
+
+    //## Throttle
     if ($batchCount >= $batchSize) {
-        sleep(10); // Pause to prevent server overload
+        if ((microtime(true) - $startTime) < 60) {
+            sleep(60 - (microtime(true) - $startTime));
+        }
+        $startTime = microtime(true);
         $batchCount = 0;
     }
 }
@@ -70,11 +48,11 @@ foreach ($contacts as $c){
 //update record
 $itemsArray = ['status', 'logs', 'updated'];
 $status = 'Completed';
-$logs = json_encode($e_msg);
+$logs = json_encode($e_msg, JSON_PARTIAL_OUTPUT_ON_ERROR);
 $updated = date($mysql_dateformat);
 $upd_tbl = 'tbl_campaigns';
 $rid = $cmid;
 include_once('common/update_record.php');
 
-sendResponse(200, true, 'Email processing completed. Check for errors', $e_msg);
+sendResponse(200, true, 'Email processing completed.', $e_msg);
 ?>

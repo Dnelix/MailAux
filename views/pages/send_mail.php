@@ -44,7 +44,7 @@ $cm_data = (isset($campaign->data) ? $campaign->data : []);
                 <div class="d-flex flex-stack">
                     <div class="text-gray-700 fw-semibold fs-6 me-2">Email: </div>
                     <div class="d-flex align-items-center">
-                        <span class="text-gray-900 fw-bold fs-7"><?= $cm_data->from_email; ?></span>
+                        <span class="text-gray-900 fw-bold fs-7"><?= $c_email[1]; ?></span>
                     </div>
                 </div>
                 <div class="separator separator-dashed my-3"></div>

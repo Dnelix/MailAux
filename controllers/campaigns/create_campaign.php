@@ -35,6 +35,11 @@ if($send_to == 'group'){
     sendResponse(401, false, 'Invalid category. Unable to proceed'); exit();
 }
 
+$num_recipients = count($contacts_array);
+if($num_recipients < 1) {
+    sendResponse(401, false, 'You must create at least one contact to set up a campaign'); exit();
+}
+
 //5. Get FROM data ($from_name; $from_email;)
 $biz = retrieveDataFrom($c_website.'controllers/business.php?data&uid='.$uid);
 $biz_data = (isset($biz->data) ? $biz->data : []);
@@ -46,7 +51,6 @@ try{
     // Insert into table
     $itemsArray = ['userid','title','from_name','from_email','send_to','group_id','contacts','num_recipients','status','updated'];
     $userid = $uid;  // title, send_to already set from form. from_name, from_email, group_id, contacts, set in code
-    $num_recipients = count($contacts_array);
     $contacts = implode(',', $contacts_array);
     $status = 'draft';
     $updated = date($mysql_dateformat);
