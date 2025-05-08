@@ -32,7 +32,7 @@
                     </a>
                 </div>
                 <div class="col-md-4 p-2">
-                    <a href="javascript:;" class="card hover-elevate-up shadow-sm parent-hover">
+                    <a href="javascript:;" <?= openModal('upload-contacts'); ?> class="card hover-elevate-up shadow-sm parent-hover">
                         <div class="card-body">
                             <div class="d-flex align-items mb-2">
                                 <i class="fa fa-file me-3"></i>

@@ -25,7 +25,8 @@
 
         <?php 
             } else if($curPage == "contacts"){
-                echo '<script src="assets/js/custom/pages/dataTablesInit.js"></script>';
+                echo '<script>$("#contacts_data_table").DataTable();</script>'; //init datatable
+                echo '<script src="assets/js/custom/dropzoneInit.js"></script>';
             }else if($curPage == "campaigns"){
                 echo '<script src="assets/js/widgets.bundle.js"></script>';
             } else if ($curPage == "" || $curPage == $authPage){ //auth pages

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table id="data_table" class="table table-row-bordered table-row-dashed gy-4 align-middle fw-bolder">
+    <table id="contacts_data_table" class="table dataTable table-row-bordered table-row-dashed gy-4 align-middle fw-bolder">
         <thead class="fs-7 text-gray-400 text-uppercase">
             <tr>
                 <th class="min-w-200px">Contact</th>

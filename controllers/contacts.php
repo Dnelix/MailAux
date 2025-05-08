@@ -29,6 +29,9 @@ if(array_key_exists('uid', $_GET)){
         }
     }
 
+    if (array_key_exists('upload', $_GET)){
+        require_once('contacts/upload_contacts.php');
+    } 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(isset($_GET['paste'])){
             require_once('contacts/add_paste_contacts.php');

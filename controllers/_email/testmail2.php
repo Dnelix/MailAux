@@ -8,11 +8,11 @@ require '../../models/mail/phpmailer/src/Exception.php';
 require '../../models/mail/phpmailer/src/SMTP.php';
 
 // Email configuration
-$subject = 'Advanced Email Testing';
+$subject = 'New Email Testing';
 $to_mail = 'chinelix05@gmail.com';
 $to_name = 'Felix';
 $sender_name = 'Jailer';
-$message = '<p>This is a <b>test email</b> reminding you that all things are possible to them that <i>TEST</i>.';
+$message = "<p>This is a <b>test email</b> to confirm that $company email works <i> CONGRATULATIONS</i>.";
 
 // Call the function to send the email and test how long it takes to execute
 $start = microtime(true);

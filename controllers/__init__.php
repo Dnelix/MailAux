@@ -4,13 +4,21 @@ require_once('../_base/_functions.php');
 require_once('../_base/DBconnect.php');
 require_once('../models/Response.php');
 
-// Handle CORS request methods
-if($_SERVER['REQUEST_METHOD'] === 'OPTIONS'){
-    header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); //options is always allowed. Include other request mthds that apply
-    header('Access-Control-Allow-Headers: Content-Type');
-    header('Access-Control-Max-Age: 86400'); // cache for 24 hours
+// CORS: Allow from specific origin
+// $allowedOrigins = ['https://'.$c_shortsite, $c_website];
+// $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-    sendResponse(200, true, '');
+// if (in_array($origin, $allowedOrigins)) {
+//     header("Access-Control-Allow-Origin: $origin");
+//     header("Access-Control-Allow-Credentials: true");
+// }
+
+// CORS: Allow standard methods and headers
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Cache-Control');
+    header('Access-Control-Max-Age: 86400'); // cache the preflight response for 1 day
+    exit;
 }
 
 //connect to DB

@@ -3,7 +3,7 @@ $limit = isset( $_GET['limit'] ) ? 'LIMIT '.intval( $_GET['limit'] ) : '';
 
 try{    
     //connect to the $readDB to perform this query since it's a read request
-    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' WHERE status = active '.$limit);
+    $query = $readDB -> prepare ('SELECT '.$all_fields.' FROM '. $tbl .' WHERE status = "active" '.$limit);
     $query -> execute();
 
     $rowCount = $query->rowCount();

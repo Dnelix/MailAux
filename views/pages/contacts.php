@@ -24,4 +24,5 @@ $c_count = count($c_data);
     include_once('contacts/modals/add_contact.php');
     include_once('contacts/modals/edit_contact.php');
     include_once('contacts/modals/paste_contacts.php');
+    include_once('contacts/modals/upload_contacts.php');
 ?>
