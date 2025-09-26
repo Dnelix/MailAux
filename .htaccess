@@ -1,36 +1,34 @@
-php_value allow_url_fopen On
-php_flag display_errors On
+<IfModule mod_php.c>
+    # PHP Configurations (Only applied if supported)
+    php_value allow_url_fopen On
+    php_flag display_errors On
+</IfModule>
 
-# CORS headers for the entire domain.
-Header set Access-Control-Allow-Origin "*"
-Header set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
-Header set Access-Control-Max-Age "86400"
-Header set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
-
-# Allow the HTTP authorization header to be used in session validations
-SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
-
-RewriteEngine On
-
-# Remove file extensions from URLs
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-# RewriteRule ^([^/]+)/?$ $1.php [L]
-RewriteRule ^(.*)$ $1.php [L]
-
-# Provide Specific Index Page (Set the default handler)
-DirectoryIndex home.php
-
-# Enable pretty URLs
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ home.php?page=$1 [NC,L]
-# RewriteRule ^([^\.]+)/([^/]+)$ home.php?page=$1&content=$2 [NC,L]
-
-# Handle CORS
 <IfModule mod_headers.c>
-    # SetEnvIf Origin "^https://(www\.)?mailaux\.com$" AccessControlAllowOrigin=$0
-    # Header always set Access-Control-Allow-Origin "%{AccessControlAllowOrigin}e" env=AccessControlAllowOrigin
-    # Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
-    # Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Cache-Control"
-    # Header always set Access-Control-Allow-Credentials "true"
+    # CORS headers for the entire domain.
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+    Header set Access-Control-Max-Age "86400"
+    Header set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+</IfModule>
+
+<IfModule mod_setenvif.c>
+    # Allow the HTTP authorization header to be used in session validations
+    SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Remove file extensions from URLs
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+
+    # Provide Specific Index Page (Set the default handler)
+    DirectoryIndex home.php
+
+    # Enable pretty URLs
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([^\.]+)$ home.php?page=$1 [NC,L]
 </IfModule>

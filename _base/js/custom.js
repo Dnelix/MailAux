@@ -326,40 +326,142 @@ function handleResponseMsg(responseMsg, action=null, url=null){
     }
 }
 
-function AJAXcall(type, url, btn, formData=null, callback){
-    if(btn){submitButtonState('loading', btn);}
+function AJAXcall(type, url, btn, formData=null, callback, options = {}) {
+    const {
+        expectJson = true,        // set false if you expect plain text/HTML
+        debug = true,             // set false to silence console diagnostics
+        timeout = 60000,          // ms (1min)
+        authToken = auth_token    // from _auth.php
+    } = options;
 
-    let isFileUpload = formData instanceof FormData; // Detect if it's a file upload
+    if (btn) { submitButtonState('loading', btn); }
+
+    const isFileUpload = formData instanceof FormData; // Detect if it's a file upload
 
     $.ajax({
         url: url,
         type: type,
-        dataType: 'JSON',
-        processData: !isFileUpload,  // Prevents jQuery from processing FormData
+        dataType: expectJson ? 'json' : 'text', // let jQuery parse JSON only when we truly expect it
+        processData: !isFileUpload, // Prevents jQuery from processing FormData
         contentType: isFileUpload ? false : 'application/json', // Handled automatically for FormData
-        headers: isFileUpload ? {} : {
-            "Authorization": `${auth_token}` // auth_token is provided from _auth.php
-        },
-        data: isFileUpload ? formData : JSON.stringify(formData),
-        
-        success: function(response){
-            var responseMsg = handleResponse(response);
+        headers: isFileUpload ? {} : { "Authorization": `${authToken}`, "Accept": expectJson ? "application/json" : "*/*" },
+        data: isFileUpload ? formData : (expectJson ? JSON.stringify(formData || {}) : (formData || '')),
+        timeout: timeout,
 
-            if(callback) {
-                callback(responseMsg); //use responseMsg in another function
-            } else {
-                handleResponseMsg(responseMsg); //send to the handleResponseMsg() fxn
+        // Useful to capture raw before any converter runs (for extra safety)
+        dataFilter: function (data, type) {
+            this._rawResponse = data;
+            return data; // Keep a copy of the raw in case parsing fails elsewhere
+        },
+
+        success: function (response, textStatus, xhr) {
+            try {
+                // If we expected JSON but got text/html, treat as unexpected
+                const ct = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+                if (expectJson && !ct.includes('application/json')) {
+                    throw new Error(`Expected JSON but received Content-Type: ${ct || 'unknown'}`);
+                }
+
+                const responseMsg = handleResponse(response);
+                if (callback) {
+                    callback(responseMsg); //use responseMsg in another function
+                } else {
+                    handleResponseMsg(responseMsg); //send to the handleResponseMsg() fxn
+                }
+            } catch (e) {
+                // Show the raw body if available
+                const raw = xhr._rawResponse || xhr.responseText || '';
+                showAjaxDiagnostics({
+                    phase: 'success-handler-exception',
+                    error: e,
+                    xhr, url, type,
+                    rawBody: raw
+                });
+                swal_popup('error', 'Received unexpected response format from server.', 'Show details');
+            } finally {
+                if (btn) { submitButtonState('enable', btn); }
+            }
+        },
+
+        error: function (xhr, textStatus, errorThrown) {
+            // Build a rich diagnostic report
+            const ct = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+            const headers = xhr.getAllResponseHeaders ? xhr.getAllResponseHeaders() : '';
+            const raw = xhr.responseText || xhr._rawResponse || '';
+            const isParserError = textStatus === 'parsererror';
+            const snippet = raw ? raw.slice(0, 1200) : '(no body)';
+
+            if (debug) {
+                console.groupCollapsed(`AJAX Error ▶ ${type} ${url} [${xhr.status} ${xhr.statusText}] (${textStatus})`);
+                console.log({ method: type, url, status: xhr.status, statusText: xhr.statusText, textStatus, errorThrown });
+                console.log('Content-Type:', ct || 'unknown');
+                console.log('Response Headers:\n' + (headers || '(none)'));
+                console.log('Raw Response Snippet:\n', snippet);
+                if (raw && raw.length > 1200) console.log(`(truncated ${raw.length - 1200} more chars)`);
+                console.groupEnd();
             }
 
-            if(btn){submitButtonState('enable', btn);}
-        },
-        
-        error: function (xhr, status, error) {
-            console.error("AJAX Error:", error);
-            swal_popup('error', 'An error occurred during the request', 'Okay. Got it!');
+            // Friendlier SweetAlert message with quick hints
+            const hint = isParserError
+                ? 'The server likely returned HTML instead of JSON.'
+                : 'An HTTP/network error occurred.';
+
+            const details = [
+                `<b>Method:</b> ${type}`,
+                `<b>URL:</b> ${escapeHtml(url)}`,
+                `<b>Status:</b> ${xhr.status} ${escapeHtml(xhr.statusText || '')}`,
+                `<b>jQuery Status:</b> ${escapeHtml(textStatus)}`,
+                `<b>Content-Type:</b> ${escapeHtml(ct || 'unknown')}`,
+                `<b>Error:</b> ${escapeHtml(errorThrown || '')}`,
+                `<hr><b>Response (first 1200 chars):</b><pre style="white-space:pre-wrap;max-height:260px;overflow:auto;margin:8px 0;">${escapeHtml(snippet)}</pre>`
+            ].join('<br>');
+
+            swal.fire({
+                title: 'AJAX Error',
+                html: `${hint}<br><br>${details}`,
+                icon: 'error',
+                width: 800,
+                confirmButtonText: 'Okay. Got it!',
+                customClass: { confirmButton: "btn btn-primary" }
+            });
+
             if (btn) { submitButtonState('enable', btn); }
         }
     });
+    
+    // Helpers
+    function showAjaxDiagnostics({ phase, error, xhr, url, type, rawBody }) {
+        const ct = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+        const headers = xhr.getAllResponseHeaders ? xhr.getAllResponseHeaders() : '';
+        const snippet = rawBody ? rawBody.slice(0, 1200) : '(no body)';
+
+        console.groupCollapsed(`AJAX ${phase} ▶ ${type} ${url}`);
+        console.error(error);
+        console.log('Content-Type:', ct || 'unknown');
+        console.log('Response Headers:\n' + (headers || '(none)'));
+        console.log('Raw Response Snippet:\n', snippet);
+        if (rawBody && rawBody.length > 1200) console.log(`(truncated ${rawBody.length - 1200} more chars)`);
+        console.groupEnd();
+
+        swal.fire({
+            title: 'Unexpected Response',
+            html:
+                `A non-JSON response was received.<br><br>` +
+                `<b>Message:</b> ${escapeHtml(error.message || String(error))}<br>` +
+                `<b>Content-Type:</b> ${escapeHtml(ct || 'unknown')}<br>` +
+                `<hr><b>Response (first 1200 chars):</b><pre style="white-space:pre-wrap;max-height:260px;overflow:auto;margin:8px 0;">${escapeHtml(snippet)}</pre>`,
+            icon: 'warning',
+            width: 800,
+            confirmButtonText: 'Okay. Got it!',
+            customClass: { confirmButton: "btn btn-primary" }
+        });
+    }
+
+    function escapeHtml(s) {
+        return (s || '').replace(/[&<>"'`]/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
+        }[c]));
+    }
 }
 
 function logout(sessionid){

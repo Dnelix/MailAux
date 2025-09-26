@@ -485,7 +485,7 @@ function extractAndValidateEmails($input) {
 
   $returnData = array();
   $returnData['validEmails'] = $validEmails;
-  $returnData['error'] = $e_msg;
+  $returnData['error'] = (isset($e_msg) && $e_msg !== null) ? $e_msg : null;
   
   return $returnData;
 }
